@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Git and Github</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(http://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+layout: true
+class: middle
+---
+
+# Introduction to Version Control with Git
+
+## Shaun Jurgemeyer
+
+---
+
+# Obligatory about me slide
+
+* Software Developer for 13+ years
+
+* Cloud Engineer at SmartThings
+
+* Organizer of GR8Conf US and Midwest JS
+
+* Twitter, Github, etc @sjurgemeyer
+
+---
+
+# What is Version Control?
+
+A system for managing changes to a codebase.
+
+---
+
+#What is Git?
+
+* One of many Version Control Systems out there.
+* Others include Mercurial, Subversion, CVS
+* Distributed Version Control vs Client Server
+
+---
+name: problems
+layout: true
+# What problems does it try to solve?
+{{content}}
+
+---
+template: problems
+
+---
+template: problems
+![](images/bad.png)
+
+---
+template: problems
+
+* Determining how and when code changed
+* Access to previous versions of code
+* Multiple people editing the same code at the same time
+
+---
+layout: false
+
+# How does it do this?
+* Store changes in a 'repository'
+* Give each change (called a 'commit') a unique identifier. 
+* Allow labelling and access to each of these commits
+* Allow sharing of the repository and commits
+
+---
+# Installing Git
+http://git-scm.com/book/en/v2/Getting-Started-Installing-Git
+
+---
+#Initializing a repository
+```bash
+mkdir myapp
+cd myapp
+git init
+```
+
+---
+# Viewing status
+
+```bash
+git status
+```
+* Lists all changes staged for commit
+* Lists all files that are different from the staging area
+* Lists any files that haven't been added to the repository
+
+---
+#Creating a commit
+
+Add the file to the staging area (index)
+```bash
+git add <filename>
+```
+Create a commit with all changes in the staging area
+```bash
+git commit -m "First commit" 
+```
+
+---
+# Viewing history
+
+```bash
+git log
+```
+
+---
+# Viewing commits
+
+```bash
+git show <sha>
+```
+
+---
+#Referencing commits
+* By sha
+```bash
+git show 882993b1e3921d33a989795b9c190195f525c569
+```
+* by short sha
+```bash
+git show 882993b
+```
+* Relative to HEAD
+```bash
+git show HEAD~1
+```
+* Branch name
+```bash
+git show <branch name>
+```
+* Tag name
+```bash
+git show <tag name>
+```
+
+---
+# Branches and Tags
+Branches and Tags are both pointers to git commits
+
+Branches typically move frequently where tags are usually fixed
+
+---
+
+#Branches
+Typically used to separate streams of work
+```bash
+git branch # Lists all branches in the repository
+git branch <branch name> # create a new branch with the given name 
+git checkout <branch name> #Moves the HEAD pointer to the specified branch
+```
+
+---
+#Tags
+Typically used for marking releases
+```bash
+# Lists all tags in the repository
+git tag 
+
+# Create a tag with the given name pointing to HEAD. 
+# The tag DOES NOT move when more commits are created
+git tag <tag name> 
+
+# Creates a tag with the given name pointing to the specified commit
+git tag <tag name> <sha> 
+```
+
+---
+#Visualizations of commits
+https://github.com/onlywei/explain-git-with-d3
+---
+
+#Diffing commits
+* diff between current code and last commit
+```bash
+git diff
+```
+* diff specific version
+```bash
+git diff <sha>
+```
+* diff tool can be configured in your local .gitconfig
+
+---
+# Configuration
+```bash
+git config <config name> <value>
+```
+
+## Global configuration 
+~/.gitconfig
+
+```bash
+git config --global --edit #edit the global config file
+```
+
+## Project specific configuration 
+<project root>/.git/config
+
+---
+# Ignoring files
+Add patterns to the git ignore file to have git ignore the files altogether
+<project root>/.gitignore
+
+```bash
+git ignore <pattern> #adds the pattern for you
+git config --global core.excludesfile ~/.gitignore_global #sets the global ignore file
+```
+
+---
+#Remote repositories
+* Your commits are stored in your repository
+* A remote repository is a copy of the entire repository stored elsewhere.
+* You share your commits with others by 'pushing' your commits to the remote repository
+* You get other people's commits, by 'fetching' commits from a remote repository
+
+---
+# Cloning a remote repository
+```bash
+git clone <url to git repo>
+```
+* Copy of the entire repository is created on your local machine
+* A remote repository is automatically configured.  It is named 'origin'
+
+```bash 
+git remote -v #list all remote repositories
+```
+
+---
+# Remote branches
+* Branch pointers are also set on the remote repository
+* They will not be changed unless you specifically 'push' that branch.
+* You can create or modify branches locally without impacting the remote repository.
+```bash
+#List all branches, including those in the remote repository
+git branch -a 
+# Create a local branch pointing at the same location as the remote branch
+git checkout <remote branch name> 
+```
+
+---
+# Getting changes from remote branches
+Update your remote branch pointer
+```bash
+git fetch <repository> <branch>
+```
+Add the changes from the remote branch to your local branch
+```bash
+git merge <branch>
+```
+
+---
+# Fast forward vs merge
+When you don't have any changes that aren't in the branch to be merged, git can just move the pointer
+
+Otherwise, git must create a merge commit
+
+---
+# Rebasing
+Rebasing allows you to avoid merge commits.
+```bash
+git rebase <branch>
+```
+
+---
+# Merge conflicts
+* When git can't figure out how to merge two sets of changes, you will get a merge conflict.
+* In order to resolve this, you will have to manually decide how to resolve the conflicting changes.
+
+---
+# Github
+
+---
+# Forking
+* Copies another repository on github to your own local copy
+* Allows you to push changes to a remote repository of your own without affecting the main project
+
+---
+# Pull Requests
+* Ask the project admin to merge changes from one branch to another.  The changes can (and often are) on different forks
+* Allows other developers to review and comment on proposed changes
+
+---
+# Resources
+
+* Pro Git http://git-scm.com/doc
+* Git Visualizer http://onlywei.github.io/explain-git-with-d3/
+* Hub https://hub.github.com/
+* SCM Breeze https://github.com/ndbroadbent/scm_breeze
+* Git Tower http://www.git-tower.com/
+
+
+    </textarea>
+    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
